@@ -7,6 +7,7 @@ public class GameController : MonoBehaviour {
 	public GameObject cube;
 	public float spawnInterval;
 	public float spawnSpread;
+	public float speed;
 
 	private List<GameObject> cubes;
 	private float lastCubePositionX;
@@ -30,7 +31,7 @@ public class GameController : MonoBehaviour {
 	private void spawnCube () {
 		lastCubePositionX += createNewSpawnPositionX ();
 		lastCubeSpawnTime = Time.realtimeSinceStartup;
-		GameObject newCube = Instantiate (cube);
+		GameObject newCube = Instantiate (cube, gameObject.transform);
 		newCube.transform.position = new Vector3 (lastCubePositionX, 8, 0);
 		cubes.Add (newCube);
 	}
@@ -44,6 +45,16 @@ public class GameController : MonoBehaviour {
 			return spawnSpread;
 		else
 			return -spawnSpread;
+	}
+
+	public void destroyCube (GameObject cube) {
+		Debug.Log ("I destroyed a cube");
+		cubes.Remove (cube);
+		Destroy (cube);
+	}
+
+	public float getSpeed () {
+		return speed;
 	}
 
 	public float getLastCubePositionX () {
