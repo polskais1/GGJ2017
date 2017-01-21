@@ -32,7 +32,7 @@ public class Cube : MonoBehaviour {
 	}
 
 	private void checkCubeTouchedMouse(){
-		if (Input.GetMouseButton) {
+		if (Input.GetMouseButton (0)) {
 			Vector3 mouseVector = Input.mousePosition;
 			mouseVector.z = 10;
 			Vector3 userMousePosition = Camera.main.ScreenToWorldPoint (mouseVector);
