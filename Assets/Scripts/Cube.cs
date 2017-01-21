@@ -8,5 +8,7 @@ public class Cube : MonoBehaviour {
 
 	void Update () {
 		this.gameObject.transform.Rotate (0, rotationSpeed, 0);
+
+		this.gameObject.transform.Translate (0, -0.05f, 0f);
 	}
 }
