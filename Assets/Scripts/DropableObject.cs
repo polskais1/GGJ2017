@@ -9,8 +9,9 @@ public class DropableObject : MonoBehaviour
 	float gravity = 9.8f;
 
 	public bool rotates = false;
-	public float growthTime = 0.7f;
+	public float growthTime = 0.25f;
 	public float rotationRange = 500.0f;
+	public float directionRange = 10.0f;
 
 	private float startTime;
 
@@ -28,7 +29,10 @@ public class DropableObject : MonoBehaviour
 
 		} else {
 			
-			direction = new Vector2 (Random.Range (-1.0f, 1.0f), Random.Range (-1.0f, 1.0f));
+			direction = new Vector2 (
+				Random.Range (-directionRange, directionRange), 
+				Random.Range (-directionRange, directionRange)
+			);
 
 		}
 
@@ -37,7 +41,7 @@ public class DropableObject : MonoBehaviour
 	void Update () {
 		float currentSize = Mathf.Min(
 			(Time.time - startTime)/growthTime, 
-			1.0f
+			2.0f
 		);
 
 		if(rotates) {

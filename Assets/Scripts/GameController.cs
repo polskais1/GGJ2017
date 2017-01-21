@@ -21,13 +21,10 @@ public class GameController : MonoBehaviour {
 	private int hitsInARow;
 	private bool gameOver;
 
-	private List<GameObject> dropables;
-
 	void Start () {
 		lastCubePositionX = Random.Range (2.2f, -2.2f);
 		lastCubeSpawnTime = Time.realtimeSinceStartup;
 		cubes = new List<GameObject> ();
-		dropables = new List<GameObject> ();
 		gameOver = false;
 	}
 
@@ -95,6 +92,9 @@ public class GameController : MonoBehaviour {
 			playerHealth++;
 			shiftBed (-bedShiftDistance);
 		}
+		if (hitsInARow != 0 && hitsInARow % 5 == 0) {
+			spawnDrop (cube.transform.position);
+		}
 
 		destroyCube (cube);
 	}
@@ -123,18 +123,19 @@ public class GameController : MonoBehaviour {
 		return cubes;
 	}
 
-	private void spawnDrop () {
+	private void spawnDrop (Vector3 position) {
 
 		GameObject newDrop = Instantiate (dropable, gameObject.transform);
-		newDrop.transform.position = new Vector3 (4, 4, 0);
+		newDrop.transform.position = position;
 
+		StartCoroutine(destroyDrop (newDrop, 5.0f));
 
 	}
+		
+	IEnumerator destroyDrop(GameObject dropable, float time)
+	{
+		yield return new WaitForSeconds(time);
 
-	private void destroyDrop () {
-
-		GameObject newDrop = Instantiate (dropable, gameObject.transform);
-		newDrop.transform.position = new Vector3 (4, 4, 0);
-
+		Destroy (dropable);
 	}
 }
