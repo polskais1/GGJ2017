@@ -27,14 +27,19 @@ public class Cube : MonoBehaviour {
 			checkCubeTapped ();
 //			checkCubeTouchedMouse ();
 		}
+
+		if (cubeTapped) {
+			gameController.destroyCube (gameObject);
+		}
+
 	}
 
 	private void checkCubeTapped(){
 		if (canTap) {
-			if (Input.touchCount > 0) {
+//			if (Input.touchCount > 0) {
 				//checkCubeTouched ();
 				checkCubeTouchedMouse();
-			}
+//			}
 		}
 	}
 
@@ -44,10 +49,10 @@ public class Cube : MonoBehaviour {
 			mouseVector.z = 10;
 			Vector3 userMousePosition = Camera.main.ScreenToWorldPoint (mouseVector);
 
-			float lowerX = gameObject.transform.position.x - .25f;
-			float upperX = gameObject.transform.position.x + .25f;
-			float lowerY = gameObject.transform.position.y - .25f;
-			float upperY = gameObject.transform.position.y + .25f;
+			float lowerX = gameObject.transform.position.x - .5f;
+			float upperX = gameObject.transform.position.x + .5f;
+			float lowerY = gameObject.transform.position.y - .5f;
+			float upperY = gameObject.transform.position.y + .5f;
 
 			if ((userMousePosition.x > lowerX) && (userMousePosition.x < upperX) && (userMousePosition.y > lowerY) && (userMousePosition.y < upperY)) {
 				cubeTapped = true;
@@ -63,8 +68,8 @@ public class Cube : MonoBehaviour {
 
 		float lowerX = gameObject.transform.position.x - .25f;
 		float upperX = gameObject.transform.position.x + .25f;
-		float lowerY = gameObject.transform.position.x - .25f;
-		float upperY = gameObject.transform.position.x + .25f;
+		float lowerY = gameObject.transform.position.y - .25f;
+		float upperY = gameObject.transform.position.y + .25f;
 
 		if ((userTouch.x > lowerX) && (userTouch.x < upperX) && (userTouch.y > lowerY) && (userTouch.y < upperY)) {
 			cubeTapped = true;
@@ -75,19 +80,18 @@ public class Cube : MonoBehaviour {
 		if (!canTap) {
 			checkTopInput ();
 		} else {
-			Debug.Log ("can tap");
 			checkBottomInput();
 		}
 	}
 
 	private void checkTopInput(){
-		if (this.gameObject.transform.position.y < -4.5f) {
+		if (this.gameObject.transform.position.y < -2.5f) {
 			canTap = true;
 		}
 	}
 
 	private void checkBottomInput(){
-		if (this.gameObject.transform.position.y < -5.5f) {
+		if (this.gameObject.transform.position.y < -3.5f) {
 			canTap = false;
 			liveCube = false;
 			gameController.destroyCube (gameObject);
