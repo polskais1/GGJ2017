@@ -29,7 +29,7 @@ public class Cube : MonoBehaviour {
 		}
 
 		if (cubeTapped) {
-			gameController.destroyCube (gameObject);
+			gameController.scoreHit (gameObject);
 		}
 
 	}
@@ -94,7 +94,7 @@ public class Cube : MonoBehaviour {
 		if (this.gameObject.transform.position.y < -3.5f) {
 			canTap = false;
 			liveCube = false;
-			gameController.destroyCube (gameObject);
+			gameController.damagePlayer (gameObject);
 		}
 	}
 		

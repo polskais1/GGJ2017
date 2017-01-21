@@ -5,23 +5,37 @@ using System.Collections.Generic;
 public class GameController : MonoBehaviour {
 
 	public GameObject cube;
+	public GameObject bed;
 	public float spawnInterval;
 	public float spawnSpread;
 	public float speed;
+	public int playerHealth;
+	public int bedShiftDistance;
 
 	private List<GameObject> cubes;
 	private float lastCubePositionX;
 	private float lastCubeSpawnTime;
+	private int hitsInARow;
+	private bool gameOver;
 
 	void Start () {
 		lastCubePositionX = Random.Range (2.2f, -2.2f);
 		lastCubeSpawnTime = Time.realtimeSinceStartup;
 		cubes = new List<GameObject> ();
+		gameOver = false;
 	}
 
 	void FixedUpdate () {
+		if (gameOver)
+			return;
+
 		if (lastCubeSpawnTime + spawnInterval < Time.realtimeSinceStartup)
 			spawnCube ();
+	}
+
+	private void startGame () {
+		cubes = new List<GameObject> ();
+		gameOver = false;
 	}
 
 	private void spawnCube () {
@@ -43,9 +57,42 @@ public class GameController : MonoBehaviour {
 			return -spawnSpread;
 	}
 
-	public void destroyCube (GameObject cube) {
+	private void endGame () {
+		gameOver = true;
+		foreach (GameObject cube in cubes)
+			Destroy (cube);
+	}
+
+	private void destroyCube (GameObject cube) {
 		cubes.Remove (cube);
 		Destroy (cube);
+	}
+
+	private void shiftBed (float distance) {
+		bed.transform.Translate (0, distance, 0);
+	}
+
+	public void scoreHit (GameObject cube) {
+		hitsInARow++;
+		if (hitsInARow == 10 && playerHealth < 5) {
+			hitsInARow = 0;
+			playerHealth++;
+			shiftBed (-bedShiftDistance);
+		}
+
+		destroyCube (cube);
+	}
+
+	public void damagePlayer (GameObject cube) {
+		hitsInARow = 0;
+		if (playerHealth == 1) {
+			endGame ();
+			return;
+		}
+
+		playerHealth--;
+		destroyCube (cube);
+		shiftBed (bedShiftDistance);
 	}
 
 	public float getSpeed () {
