@@ -85,13 +85,13 @@ public class Cube : MonoBehaviour {
 	}
 
 	private void checkTopInput(){
-		if (this.gameObject.transform.position.y < -2.5f) {
+		if (this.gameObject.transform.position.y < gameController.getUpperBarPositionY()) {
 			canTap = true;
 		}
 	}
 
 	private void checkBottomInput(){
-		if (this.gameObject.transform.position.y < -3.5f) {
+		if (this.gameObject.transform.position.y < gameController.getLowerBarPositionY()) {
 			canTap = false;
 			liveCube = false;
 			gameController.destroyCube (gameObject);

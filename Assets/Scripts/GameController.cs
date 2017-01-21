@@ -8,6 +8,8 @@ public class GameController : MonoBehaviour {
 	public float spawnInterval;
 	public float spawnSpread;
 	public float speed;
+	public float upperBarPositionY;
+	public float lowerBarPositionY;
 
 	private List<GameObject> cubes;
 	private float lastCubePositionX;
@@ -46,6 +48,14 @@ public class GameController : MonoBehaviour {
 	public void destroyCube (GameObject cube) {
 		cubes.Remove (cube);
 		Destroy (cube);
+	}
+
+	public float getUpperBarPositionY(){
+		return upperBarPositionY;
+	}
+
+	public float getLowerBarPositionY(){
+		return lowerBarPositionY;
 	}
 
 	public float getSpeed () {
