@@ -11,7 +11,7 @@ public class WaveTrail : MonoBehaviour {
 	}
 
 	void Update () {
-		float trailX = gameController.getLastCubePositionX () - this.gameObject.transform.position.x;
+		float trailX = gameController.getLastCubePositionX () - gameObject.transform.position.x;
 		LineRenderer linerenderer = gameObject.GetComponent<LineRenderer> ();
 
 		List<GameObject> cubes = gameController.getCubes ();

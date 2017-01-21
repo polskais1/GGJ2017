@@ -4,22 +4,29 @@ using System.Collections;
 public class Cube : MonoBehaviour {
 
 	public float rotationSpeed;
-	//public GameController gameController;
 	public bool cubeTapped;
 	public bool canTap;
 	public bool liveCube;
 
+	private GameController gameController;
+
+	void Awake () {
+		gameController = gameObject.GetComponentInParent<GameController> ();
+		liveCube = true;
+		canTap = false;
+		cubeTapped = false;
+	}
+
 	void Update () {
 		this.gameObject.transform.Rotate (0, rotationSpeed, 0);
 
-		this.gameObject.transform.Translate (0, -0.05f, 0f);
+		this.gameObject.transform.Translate (0, gameController.getSpeed (), 0f);
 
 		if (liveCube) {
 			checkCanTap ();
 			checkCubeTapped ();
 //			checkCubeTouchedMouse ();
 		}
-
 	}
 
 	private void checkCubeTapped(){
@@ -37,10 +44,10 @@ public class Cube : MonoBehaviour {
 			mouseVector.z = 10;
 			Vector3 userMousePosition = Camera.main.ScreenToWorldPoint (mouseVector);
 
-			float lowerX = this.gameObject.transform.position.x - .25f;
-			float upperX = this.gameObject.transform.position.x + .25f;
-			float lowerY = this.gameObject.transform.position.y - .25f;
-			float upperY = this.gameObject.transform.position.y + .25f;
+			float lowerX = gameObject.transform.position.x - .25f;
+			float upperX = gameObject.transform.position.x + .25f;
+			float lowerY = gameObject.transform.position.y - .25f;
+			float upperY = gameObject.transform.position.y + .25f;
 
 			if ((userMousePosition.x > lowerX) && (userMousePosition.x < upperX) && (userMousePosition.y > lowerY) && (userMousePosition.y < upperY)) {
 				cubeTapped = true;
@@ -54,10 +61,10 @@ public class Cube : MonoBehaviour {
 		userTouchVector.z = 10;
 		Vector3 userTouch = Camera.main.ScreenToWorldPoint (userTouchVector);
 
-		float lowerX = this.gameObject.transform.position.x - .25f;
-		float upperX = this.gameObject.transform.position.x + .25f;
-		float lowerY = this.gameObject.transform.position.x - .25f;
-		float upperY = this.gameObject.transform.position.x + .25f;
+		float lowerX = gameObject.transform.position.x - .25f;
+		float upperX = gameObject.transform.position.x + .25f;
+		float lowerY = gameObject.transform.position.x - .25f;
+		float upperY = gameObject.transform.position.x + .25f;
 
 		if ((userTouch.x > lowerX) && (userTouch.x < upperX) && (userTouch.y > lowerY) && (userTouch.y < upperY)) {
 			cubeTapped = true;
@@ -68,20 +75,22 @@ public class Cube : MonoBehaviour {
 		if (!canTap) {
 			checkTopInput ();
 		} else {
+			Debug.Log ("can tap");
 			checkBottomInput();
 		}
 	}
 
 	private void checkTopInput(){
-		if (this.gameObject.transform.position.y < -6.5f) {
+		if (this.gameObject.transform.position.y < -4.5f) {
 			canTap = true;
 		}
 	}
 
 	private void checkBottomInput(){
-		if (this.gameObject.transform.position.y < -7.5f) {
+		if (this.gameObject.transform.position.y < -5.5f) {
 			canTap = false;
 			liveCube = false;
+			gameController.destroyCube (gameObject);
 		}
 	}
 		
