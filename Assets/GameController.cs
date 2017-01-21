@@ -9,6 +9,8 @@ public class GameController : MonoBehaviour {
 	private float lastCubePositionX;
 	private float lastCubeSpawn;
 
+	public float inputTop;
+	public float inputBottom;
 	//	TODO create logic for when to spawn a block
 	//	TODO create logic to ensure that the spawned blocks are in a wave pattern
 	//	TODO blocks need to move down towards the hit area
@@ -19,6 +21,7 @@ public class GameController : MonoBehaviour {
 		lastCubePositionX = Random.Range (2.2f, -2.2f);
 
 		spawnBlock (lastCubePositionX);
+
 	}
 
 	void FixedUpdate () {
