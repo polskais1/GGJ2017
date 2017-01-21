@@ -14,10 +14,6 @@ public class GameController : MonoBehaviour {
 	private float lastCubePositionX;
 	private float lastCubeSpawnTime;
 
-	//	TODO create logic so that a block knows when it is in the hit area
-	//	TODO create logic for hit/miss tap input
-	//	TODO destroy a cube when it exits the scene
-
 	void Start () {
 		lastCubePositionX = Random.Range (2.2f, -2.2f);
 		lastCubeSpawnTime = Time.realtimeSinceStartup;
