@@ -6,8 +6,8 @@ public class GameController : MonoBehaviour {
 	public GameObject cube;
 	public float spawnInterval;
 
-	private float lastBlockPositionX;
-	private float lastBlockSpawn;
+	private float lastCubePositionX;
+	private float lastCubeSpawn;
 
 	//	TODO create logic for when to spawn a block
 	//	TODO create logic to ensure that the spawned blocks are in a wave pattern
@@ -16,9 +16,9 @@ public class GameController : MonoBehaviour {
 	//	TODO create logic for hit/miss tap input
 
 	void Start () {
-		lastBlockPositionX = Random.Range (2.2f, -2.2f);
+		lastCubePositionX = Random.Range (2.2f, -2.2f);
 
-		spawnBlock (lastBlockPositionX);
+		spawnBlock (lastCubePositionX);
 	}
 
 	void FixedUpdate () {
