@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class GameController : MonoBehaviour {
 
 	public GameObject cube;
+	public GameObject dropable;
 	public float spawnInterval;
 	public float spawnSpread;
 	public float speed;
@@ -22,8 +23,9 @@ public class GameController : MonoBehaviour {
 	}
 
 	void FixedUpdate () {
-		if (lastCubeSpawnTime + spawnInterval < Time.realtimeSinceStartup)
+		if (lastCubeSpawnTime + spawnInterval < Time.realtimeSinceStartup) {
 			spawnCube ();
+		}
 	}
 
 	private void spawnCube () {
@@ -68,5 +70,12 @@ public class GameController : MonoBehaviour {
 
 	public List<GameObject> getCubes () {
 		return cubes;
+	}
+
+	private void spawnDrop () {
+
+		GameObject newDrop = Instantiate (dropable, gameObject.transform);
+		newDrop.transform.position = new Vector3 (4, 4, 0);
+
 	}
 }
