@@ -18,7 +18,8 @@ public class WaveTrail : MonoBehaviour {
 		linerenderer.numPositions = cubes.Count;
 
 		for (int i = 0; i < cubes.Count; i++) {
-			linerenderer.SetPosition (i, cubes [i].transform.position);
+			if (cubes [i] != null)
+				linerenderer.SetPosition (i, cubes [i].transform.position);
 		}
 	}
 }
