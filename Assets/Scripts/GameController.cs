@@ -10,8 +10,9 @@ public class GameController : MonoBehaviour {
 	public float spawnInterval;
 	public float spawnSpread;
 	public float speed;
-	public float upperBarPositionY;
-	public float lowerBarPositionY;
+	public float offsetResetSpeed;
+	public float upperBarOffset;
+	public float lowerBarOffset;
 	public int playerHealth;
 	public int bedShiftDistance;
 
@@ -20,12 +21,18 @@ public class GameController : MonoBehaviour {
 	private float lastCubeSpawnTime;
 	private int hitsInARow;
 	private bool gameOver;
+	private float currentPositionOffset;
+	private float targetPositionOffset;
+	private float upperBarPositionY;
+	private float lowerBarPositionY;
 
 	void Start () {
 		lastCubePositionX = Random.Range (2.2f, -2.2f);
 		lastCubeSpawnTime = Time.realtimeSinceStartup;
 		cubes = new List<GameObject> ();
 		gameOver = false;
+		currentPositionOffset = bed.transform.position.y;
+		targetPositionOffset = bed.transform.position.y;
 	}
 
 	void FixedUpdate () {
@@ -35,6 +42,18 @@ public class GameController : MonoBehaviour {
 		if (lastCubeSpawnTime + spawnInterval < Time.realtimeSinceStartup) {
 			spawnCube ();
 		}
+	}
+
+	void Update () {
+		if (currentPositionOffset > targetPositionOffset)
+			currentPositionOffset -= offsetResetSpeed;
+
+		if (currentPositionOffset < targetPositionOffset)
+			currentPositionOffset += offsetResetSpeed;
+
+		bed.transform.position = new Vector3 (0, currentPositionOffset, 1);
+		upperBarPositionY = currentPositionOffset + upperBarOffset;
+		lowerBarPositionY = currentPositionOffset + lowerBarOffset;
 	}
 
 	private void startGame () {
@@ -82,7 +101,7 @@ public class GameController : MonoBehaviour {
 	}
 
 	private void shiftBed (float distance) {
-		bed.transform.Translate (0, distance, 0);
+		targetPositionOffset = bed.transform.position.y + distance;
 	}
 
 	public void scoreHit (GameObject cube) {
@@ -121,9 +140,7 @@ public class GameController : MonoBehaviour {
 	}
 
 	private void spawnDrop () {
-
 		GameObject newDrop = Instantiate (dropable, gameObject.transform);
 		newDrop.transform.position = new Vector3 (4, 4, 0);
-
 	}
 }

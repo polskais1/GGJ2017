@@ -66,10 +66,10 @@ public class Cube : MonoBehaviour {
 		userTouchVector.z = 10;
 		Vector3 userTouch = Camera.main.ScreenToWorldPoint (userTouchVector);
 
-		float lowerX = gameObject.transform.position.x - .25f;
-		float upperX = gameObject.transform.position.x + .25f;
-		float lowerY = gameObject.transform.position.y - .25f;
-		float upperY = gameObject.transform.position.y + .25f;
+		float lowerX = gameObject.transform.position.x - .5f;
+		float upperX = gameObject.transform.position.x + .5f;
+		float lowerY = gameObject.transform.position.y - .5f;
+		float upperY = gameObject.transform.position.y + .5f;
 
 		if ((userTouch.x > lowerX) && (userTouch.x < upperX) && (userTouch.y > lowerY) && (userTouch.y < upperY)) {
 			cubeTapped = true;

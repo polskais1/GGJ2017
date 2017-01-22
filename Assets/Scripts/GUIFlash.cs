@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor.AnimatedValues;
 
 public class GUIFlash : MonoBehaviour {
 	public float duration = 1.0F;
