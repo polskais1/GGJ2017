@@ -130,6 +130,7 @@ public class GameController : MonoBehaviour {
 		difficultyModifier = 1f;
 		targetScore = Mathf.RoundToInt (perRoundScore * (difficultyModifier * 100f));
 		startNewRound ();
+		PlayMusic ();
 	}
 
 	private void startNewRound () {
@@ -146,6 +147,7 @@ public class GameController : MonoBehaviour {
 			Destroy (cube);
 		gameOver = true;
 		inEndSequence = true;
+		StopMusic ();
 	}
 
 	//	Logic for starting a new round in an ongoing game
@@ -225,6 +227,18 @@ public class GameController : MonoBehaviour {
 		audio.Play();
 	}
 
+	private void PlayMusic() {
+		GameObject bg = transform.Find ("backgroundMusic").gameObject;
+		AudioSource music = bg.GetComponent<AudioSource> ();
+		music.Play ();
+	}
+
+	private void StopMusic() {
+		GameObject bg = transform.Find ("backgroundMusic").gameObject;
+		AudioSource music = bg.GetComponent<AudioSource> ();
+		music.Stop ();
+	}
+
 	private float createNewSpawnPositionX (int wavePattern) {
 		float result;
 		switch(wavePattern){
@@ -280,7 +294,6 @@ public class GameController : MonoBehaviour {
 		streak++;
 		if (streak == 10) {
 			streak = 0;
-			playGoodSound ();
 			if (playerHealth < 5) {
 				playerHealth++;
 				shiftBed (-bedShiftDistance);
@@ -289,6 +302,7 @@ public class GameController : MonoBehaviour {
 
 		if (streak != 0 && streak % 5 == 0) {
 			spawnDrop (new Vector3( cube.transform.position.x, cube.transform.position.y, 1.0f), true);
+			playGoodSound ();
 		}
 
 		if (playerHealth > 3)
