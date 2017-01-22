@@ -26,7 +26,6 @@ public class ColorCycle : MonoBehaviour {
 	void setColors() {
 		
 		hue = Mathf.Abs((Mathf.Sin (Time.time / colorCycleDuration * 2)));
-		Debug.Log (hue);
 
 		gameObject.GetComponent<Renderer> ().material.color = Color.HSVToRGB (hue, 1.0f, 1.0f);
 
