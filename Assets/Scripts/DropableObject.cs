@@ -55,7 +55,7 @@ public class DropableObject : MonoBehaviour
 
 			gameObject.transform.position += new Vector3 (
 				direction.x * Time.deltaTime, 
-				direction.y * Time.deltaTime, 
+				direction.y * 2.0f * Time.deltaTime, 
 				gravity * Time.deltaTime
 			);
 

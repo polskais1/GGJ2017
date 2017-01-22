@@ -164,6 +164,9 @@ public class GameController : MonoBehaviour {
 			return;
 		}
 
+		if (playerHealth < 4)
+			bed.GetComponent<SpriteRenderer> ().sprite = neutral;
+
 		playerHealth--;
 		destroyCube (cube);
 		shiftBed (bedShiftDistance);
