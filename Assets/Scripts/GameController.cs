@@ -311,7 +311,6 @@ public class GameController : MonoBehaviour {
 
 	public void damagePlayer (GameObject cube) {
 		streak = 0;
-		Handheld.Vibrate();
 		spawnDrop (new Vector3( cube.transform.position.x, cube.transform.position.y, 1.0f), false);
 
 		if (playerHealth == 1) {
