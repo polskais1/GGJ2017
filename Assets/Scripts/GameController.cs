@@ -31,23 +31,15 @@ public class GameController : MonoBehaviour {
 	public Mesh goodMesh1;
 	public Mesh goodMesh2;
 	public Mesh goodMesh3;
-	public Mesh goodMesh4;
-	public Mesh goodMesh5;
 	public Mesh badMesh1;
 	public Mesh badMesh2;
 	public Mesh badMesh3;
-	public Mesh badMesh4;
-	public Mesh badMesh5;
 	public Material goodMat1;
 	public Material goodMat2;
 	public Material goodMat3;
-	public Material goodMat4;
-	public Material goodMat5;
 	public Material badMat1;
 	public Material badMat2;
 	public Material badMat3;
-	public Material badMat4;
-	public Material badMat5;
 
 	public int badCubeCounter;
 	public int targetScore;
@@ -363,21 +355,15 @@ public class GameController : MonoBehaviour {
 
 		newDrop.transform.position = position;
 
-		if (which > 0.8f) {
+		if (which > 0.6f) {
 			newMesh = good ? goodMesh1 : badMesh1;
 			newMat = good ? goodMat1 : badMat1;
-		} else if (which > 0.6f) {
+		} else if (which > 0.3f) {
 			newMesh = good ? goodMesh2 : badMesh2;
 			newMat = good ? goodMat2 : badMat2;
-		} else if (which > 0.4f) {
+		} else {
 			newMesh = good ? goodMesh3 : badMesh3;
 			newMat = good ? goodMat3 : badMat3;
-		} else if (which > 0.2f) {
-			newMesh = good ? goodMesh4 : badMesh4;
-			newMat = good ? goodMat4 : badMat4;
-		} else {
-			newMesh = good ? goodMesh5 : badMesh5;
-			newMat = good ? goodMat5 : badMat5;
 		}
 		
 		newDrop.gameObject.GetComponentInChildren<MeshFilter> ().mesh = newMesh;

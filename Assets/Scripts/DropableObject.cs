@@ -11,7 +11,7 @@ public class DropableObject : MonoBehaviour
 	public bool rotates = false;
 	public float growthTime = 0.25f;
 	public float rotationRange = 500.0f;
-	public float directionRange = 2.5f;
+	public float directionRange = 1.5f;
 
 	private float startTime;
 
