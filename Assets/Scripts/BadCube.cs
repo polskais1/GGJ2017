@@ -17,20 +17,22 @@ public class BadCube : Cube
 		if (liveCube) {
 			checkCanTap ();
 			checkCubeTapped ();
-			//			checkCubeTouchedMouse ();
+		} 
+
+		if (!liveCube) {
+			gameController.scoreHit (gameObject);
+
 		}
 
 		if (cubeTapped) {
 			gameController.damagePlayer (gameObject);
 		}
-
 	}
 
 	protected override void checkBottomInput(){
 		if (this.gameObject.transform.position.y < gameController.getLowerBarPositionY()) {
 			canTap = false;
 			liveCube = false;
-			gameController.scoreHit (gameObject);
 		}
 	}
 
