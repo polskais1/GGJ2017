@@ -20,18 +20,23 @@ public class GameController : MonoBehaviour {
 	public float offsetResetSpeed;
 	public float upperBarOffset;
 	public float lowerBarOffset;
+	public float difficultyModifier;
+	public float perRoundScore;
 	public int playerHealth;
 	public int bedShiftDistance;
 	public int randomWave;
 	public int waveCounter;
+	public int targetScore;
 
 	private List<GameObject> cubes;
 	private float lastCubePositionX;
 	private float lastCubeSpawnTime;
 	private int hitsInARow;
+	private int score;
 	private bool gameOver;
 	private bool inStartSequence;
 	private bool inEndSequence;
+	private bool betweenRounds = true;
 	private float currentPositionOffset;
 	private float targetPositionOffset;
 	private float upperBarPositionY;
@@ -45,14 +50,26 @@ public class GameController : MonoBehaviour {
 		currentPositionOffset = bed.transform.position.y;
 		targetPositionOffset = bed.transform.position.y;
 		bed.GetComponent<SpriteRenderer> ().sprite = neutral;
+		targetScore = Mathf.RoundToInt (perRoundScore * (difficultyModifier * 10f));
+		betweenRounds = false;
 	}
 
 	void FixedUpdate () {
-		if (gameOver && !inStartSequence) {
-			if (Input.GetMouseButton (0))
+		if (gameOver) {
+			if (Input.GetMouseButtonDown (0) && !inStartSequence && !betweenRounds)
 				inStartSequence = true;
+			else if (Input.GetMouseButtonDown (0) && !inStartSequence && !betweenRounds)
+				startNextRound ();
 			return;
 		}
+
+		if (score >= targetScore) {
+			endRound ();
+			return;
+		}
+
+		if (!waveTrail.activeSelf)
+			waveTrail.SetActive (true);
 		
 		if (lastCubeSpawnTime + spawnInterval < Time.fixedTime) {
 			spawnCube ();
@@ -77,12 +94,32 @@ public class GameController : MonoBehaviour {
 		lowerBarPositionY = currentPositionOffset + lowerBarOffset;
 	}
 
-	private void startGame () {
+//	Logic for starting a new game from the beginning
+	private void startNewGame () {
 		targetPositionOffset = -6f;
 		bed.GetComponent<SpriteRenderer> ().sprite = neutral;
 		playerHealth = 3;
-		waveTrail.SetActive (true);
 		gameOver = false;
+		score = 0;
+	}
+
+	private void endGame () {
+		waveTrail.SetActive (false);
+		foreach (GameObject cube in cubes)
+			Destroy (cube);
+		gameOver = true;
+		inEndSequence = true;
+	}
+
+//	Logic for starting a new round in an ongoing game
+	private void startNextRound () {
+		difficultyModifier += 0.1f;
+		targetScore = targetScore + Mathf.RoundToInt (perRoundScore * (difficultyModifier * 10f));
+	}
+
+	private void endRound () {
+		endGame ();
+		betweenRounds = true;
 	}
 
 	private void moveCamera (float distance, int target) {
@@ -97,7 +134,7 @@ public class GameController : MonoBehaviour {
 			inEndSequence = false;
 			cubes = new List<GameObject> ();
 			if (target == 0)
-				startGame ();
+				startNewGame ();
 		}
 	}
 
@@ -150,14 +187,6 @@ public class GameController : MonoBehaviour {
 		return result;
 	}
 
-	private void endGame () {
-		waveTrail.SetActive (false);
-		foreach (GameObject cube in cubes)
-			Destroy (cube);
-		gameOver = true;
-		inEndSequence = true;
-	}
-
 	private void destroyCube (GameObject cube) {
 		cubes.Remove (cube);
 		Destroy (cube);
@@ -177,6 +206,8 @@ public class GameController : MonoBehaviour {
 	}
 
 	public void scoreHit (GameObject cube) {
+		score++;
+		Debug.Log (score);
 		hitsInARow++;
 		if (hitsInARow == 10 && playerHealth < 5) {
 			hitsInARow = 0;
@@ -209,7 +240,7 @@ public class GameController : MonoBehaviour {
 	}
 
 	public float getSpeed () {
-		return speed;
+		return speed * difficultyModifier;
 	}
 
 	public float getLastCubePositionX () {
