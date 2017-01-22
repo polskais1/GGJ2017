@@ -39,10 +39,10 @@ public class DropableObject : MonoBehaviour
 	}
 
 	void Update () {
-		float currentSize = Mathf.Min(
-			(Time.time - startTime)/growthTime, 
-			1.0f
-		) * 0.35f;
+		float currentSize = Mathf.Min (
+			                    (Time.time - startTime) / growthTime, 
+			                    1.0f
+		                    ) * 2.0f;
 
 		if(rotates) {
 
