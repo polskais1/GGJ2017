@@ -31,12 +31,12 @@ public class GameController : MonoBehaviour {
 	private List<GameObject> cubes;
 	private float lastCubePositionX;
 	private float lastCubeSpawnTime;
-	private int hitsInARow;
+	private int streak;
 	private int score;
 	private bool gameOver;
 	private bool inStartSequence;
 	private bool inEndSequence;
-	private bool betweenRounds = true;
+	private bool betweenRounds;
 	private float currentPositionOffset;
 	private float targetPositionOffset;
 	private float upperBarPositionY;
@@ -58,7 +58,7 @@ public class GameController : MonoBehaviour {
 		if (gameOver) {
 			if (Input.GetMouseButtonDown (0) && !inStartSequence && !betweenRounds)
 				inStartSequence = true;
-			else if (Input.GetMouseButtonDown (0) && !inStartSequence && !betweenRounds)
+			else if (Input.GetMouseButtonDown (0) && !inStartSequence && betweenRounds)
 				startNextRound ();
 			return;
 		}
@@ -96,11 +96,20 @@ public class GameController : MonoBehaviour {
 
 //	Logic for starting a new game from the beginning
 	private void startNewGame () {
+		Debug.Log ("starting a new game");
+		score = 0;
+		difficultyModifier = 1f;
+		targetScore = Mathf.RoundToInt (perRoundScore * (difficultyModifier * 10f));
+		startNewRound ();
+	}
+
+	private void startNewRound () {
+		Debug.Log ("starting a new round");
 		targetPositionOffset = -6f;
 		bed.GetComponent<SpriteRenderer> ().sprite = neutral;
 		playerHealth = 3;
 		gameOver = false;
-		score = 0;
+		betweenRounds = false;
 	}
 
 	private void endGame () {
@@ -111,10 +120,11 @@ public class GameController : MonoBehaviour {
 		inEndSequence = true;
 	}
 
-//	Logic for starting a new round in an ongoing game
+	//	Logic for starting a new round in an ongoing game
 	private void startNextRound () {
 		difficultyModifier += 0.1f;
 		targetScore = targetScore + Mathf.RoundToInt (perRoundScore * (difficultyModifier * 10f));
+		inStartSequence = true;
 	}
 
 	private void endRound () {
@@ -133,8 +143,10 @@ public class GameController : MonoBehaviour {
 			inStartSequence = false;
 			inEndSequence = false;
 			cubes = new List<GameObject> ();
-			if (target == 0)
+			if (target == 0 && !betweenRounds)
 				startNewGame ();
+			else if (target == 0)
+				startNewRound ();
 		}
 	}
 
@@ -208,13 +220,13 @@ public class GameController : MonoBehaviour {
 	public void scoreHit (GameObject cube) {
 		score++;
 		Debug.Log (score);
-		hitsInARow++;
-		if (hitsInARow == 10 && playerHealth < 5) {
-			hitsInARow = 0;
+		streak++;
+		if (streak == 10 && playerHealth < 5) {
+			streak = 0;
 			playerHealth++;
 			shiftBed (-bedShiftDistance);
 		}
-		if (hitsInARow != 0 && hitsInARow % 5 == 0) {
+		if (streak != 0 && streak % 5 == 0) {
 			spawnDrop (cube.transform.position);
 		}
 		if (playerHealth > 3)
@@ -224,7 +236,7 @@ public class GameController : MonoBehaviour {
 	}
 
 	public void damagePlayer (GameObject cube) {
-		hitsInARow = 0;
+		streak = 0;
 		if (playerHealth == 1) {
 			bed.GetComponent<SpriteRenderer> ().sprite = angry;
 			endGame ();
@@ -241,6 +253,14 @@ public class GameController : MonoBehaviour {
 
 	public float getSpeed () {
 		return speed * difficultyModifier;
+	}
+
+	public int getScore () {
+		return score;
+	}
+
+	public int getStreak () {
+		return streak;
 	}
 
 	public float getLastCubePositionX () {
