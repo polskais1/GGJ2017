@@ -14,6 +14,7 @@ public class GameController : MonoBehaviour {
 	public Sprite angry;
 	public float spawnInterval;
 	public float spawnSpread;
+	public float spawnCounter;
 	public float speed;
 	public float bedOrigin;
 	public float offsetResetSpeed;
@@ -21,6 +22,8 @@ public class GameController : MonoBehaviour {
 	public float lowerBarOffset;
 	public int playerHealth;
 	public int bedShiftDistance;
+	public int randomWave;
+	public int waveCounter;
 
 	private List<GameObject> cubes;
 	private float lastCubePositionX;
@@ -36,7 +39,7 @@ public class GameController : MonoBehaviour {
 
 	void Start () {
 		lastCubePositionX = Random.Range (2.2f, -2.2f);
-		lastCubeSpawnTime = Time.realtimeSinceStartup;
+		lastCubeSpawnTime = Time.fixedTime;
 		cubes = new List<GameObject> ();
 		gameOver = true;
 		currentPositionOffset = bed.transform.position.y;
@@ -51,7 +54,7 @@ public class GameController : MonoBehaviour {
 			return;
 		}
 		
-		if (lastCubeSpawnTime + spawnInterval < Time.realtimeSinceStartup) {
+		if (lastCubeSpawnTime + spawnInterval < Time.fixedTime) {
 			spawnCube ();
 		}
 	}
@@ -99,22 +102,52 @@ public class GameController : MonoBehaviour {
 	}
 
 	private void spawnCube () {
-		lastCubePositionX += createNewSpawnPositionX ();
-		lastCubeSpawnTime = Time.realtimeSinceStartup;
+		spawnCounter += spawnSpread;
+		waveCounter++;
+		if (waveCounter > 20) {
+			waveCounter = 0;
+			randomWave = Random.Range (0,3);
+			Debug.Log("New Wave!  Wave: " + randomWave);
+		}
+		lastCubePositionX = createNewSpawnPositionX (randomWave);
+
+		lastCubeSpawnTime = Time.fixedTime;
 		GameObject newCube = Instantiate (cube, gameObject.transform);
 		newCube.transform.position = new Vector3 (lastCubePositionX, 8, 0);
 		cubes.Add (newCube);
 	}
 
-	private float createNewSpawnPositionX () {
-		if (lastCubePositionX > 2.15)
-			return -spawnSpread;
-		else if (lastCubePositionX < -2.15)
-			return spawnSpread;
-		else if (Random.Range (0, 2) == 0)
-			return spawnSpread;
-		else
-			return -spawnSpread;
+	private float createNewSpawnPositionX (int wavePattern) {
+		float result;
+		switch(wavePattern){
+		case 2:
+			result = (2.15f * (Mathf.Sin (spawnCounter)));
+			speed = -.05f;
+			spawnInterval = .3f;
+			spawnSpread = .5f;
+			break;
+		case 1:
+			result = (2.00f * (Mathf.Sin (spawnCounter)));
+			speed = -.045f;
+			spawnInterval = .18f;
+			spawnSpread = .65f;
+			break;
+		case 0:
+			result = (1.15f * (Mathf.Sin (spawnCounter)));
+			speed = -.055f;
+			spawnInterval = .35f;
+			spawnSpread = .5f;
+			break;
+		default:
+			result = (2.15f * (Mathf.Sin (spawnCounter)));
+			speed = -.05f;
+			spawnInterval = .3f;
+			spawnSpread = .5f;
+			break;
+		}
+			
+
+		return result;
 	}
 
 	private void endGame () {
