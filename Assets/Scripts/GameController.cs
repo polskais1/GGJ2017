@@ -220,6 +220,11 @@ public class GameController : MonoBehaviour {
 		}
 	}
 
+	private void playGoodSound(){
+		AudioSource audio = GetComponent<AudioSource>();
+		audio.Play();
+	}
+
 	private float createNewSpawnPositionX (int wavePattern) {
 		float result;
 		switch(wavePattern){
@@ -275,6 +280,7 @@ public class GameController : MonoBehaviour {
 		streak++;
 		if (streak == 10) {
 			streak = 0;
+			playGoodSound ();
 			if (playerHealth < 5) {
 				playerHealth++;
 				shiftBed (-bedShiftDistance);
@@ -293,6 +299,7 @@ public class GameController : MonoBehaviour {
 
 	public void damagePlayer (GameObject cube) {
 		streak = 0;
+		Handheld.Vibrate();
 		spawnDrop (new Vector3( cube.transform.position.x, cube.transform.position.y, 1.0f), false);
 
 		if (playerHealth == 1) {
