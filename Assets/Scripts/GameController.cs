@@ -26,7 +26,12 @@ public class GameController : MonoBehaviour {
 	public int bedShiftDistance;
 	public int randomWave;
 	public int waveCounter;
-	public int targetScore;
+	public int targetScore = 0;
+	public Mesh mesh1;
+	public Mesh mesh2;
+	public Mesh mesh3;
+	public Texture2D tex1;
+
 
 	private List<GameObject> cubes;
 	private float lastCubePositionX;
@@ -50,7 +55,8 @@ public class GameController : MonoBehaviour {
 		currentPositionOffset = bed.transform.position.y;
 		targetPositionOffset = bed.transform.position.y;
 		bed.GetComponent<SpriteRenderer> ().sprite = neutral;
-		targetScore = Mathf.RoundToInt (perRoundScore * (difficultyModifier * 10f));
+		if(targetScore == 0)
+			targetScore = Mathf.RoundToInt (perRoundScore * (difficultyModifier * 10f));
 		betweenRounds = false;
 	}
 
@@ -219,16 +225,17 @@ public class GameController : MonoBehaviour {
 
 	public void scoreHit (GameObject cube) {
 		score++;
-		Debug.Log (score);
 		streak++;
 		if (streak == 10 && playerHealth < 5) {
 			streak = 0;
 			playerHealth++;
 			shiftBed (-bedShiftDistance);
 		}
+
 		if (streak != 0 && streak % 5 == 0) {
-			spawnDrop (cube.transform.position);
+			spawnDrop (new Vector3( cube.transform.position.x, cube.transform.position.y, 1.0f));
 		}
+
 		if (playerHealth > 3)
 			bed.GetComponent<SpriteRenderer> ().sprite = happy;
 
@@ -276,10 +283,21 @@ public class GameController : MonoBehaviour {
 	}
 
 	private void spawnDrop (Vector3 position) {
-
+		
+		Mesh newMesh;
+		float which = Random.Range(0.0f,1.0f);
 		GameObject newDrop = Instantiate (dropable, gameObject.transform);
 		newDrop.transform.position = position;
 
+		if (which > 0.6f)
+			newMesh = mesh1;
+		else if (which > 0.3f)
+			newMesh = mesh2;
+		else
+			newMesh = mesh3;
+		
+		newDrop.gameObject.GetComponentInChildren<MeshFilter> ().mesh = newMesh;
+		newDrop.gameObject.GetComponentInChildren<Material> ().mainTexture = tex1;
 		StartCoroutine(destroyDrop (newDrop, 5.0f));
 
 	}
