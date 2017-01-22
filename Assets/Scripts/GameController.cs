@@ -67,10 +67,12 @@ public class GameController : MonoBehaviour {
 	private float targetPositionOffset;
 	private float upperBarPositionY;
 	private float lowerBarPositionY;
+	private float cubeSpawnTimer;
 
 	void Start () {
 		lastCubePositionX = Random.Range (2.2f, -2.2f);
-		lastCubeSpawnTime = Time.fixedTime;
+		lastCubeSpawnTime = 0f;
+		cubeSpawnTimer = 0f;
 		cubes = new List<GameObject> ();
 		gameOver = true;
 		currentPositionOffset = bed.transform.position.y;
@@ -96,10 +98,9 @@ public class GameController : MonoBehaviour {
 
 		if (!waveTrail.activeSelf)
 			waveTrail.SetActive (true);
-		
-		if (lastCubeSpawnTime + spawnInterval < Time.fixedTime) {
+
+		if (lastCubeSpawnTime + spawnInterval < cubeSpawnTimer)
 			spawnCube ();
-		}
 	}
 
 	void Update () {
@@ -115,6 +116,9 @@ public class GameController : MonoBehaviour {
 		if (currentPositionOffset < targetPositionOffset)
 			currentPositionOffset += offsetResetSpeed;
 
+		if (!gameOver && score < targetScore)
+			cubeSpawnTimer += 1f;
+
 		bed.transform.position = new Vector3 (0, currentPositionOffset, 1);
 		upperBarPositionY = currentPositionOffset + upperBarOffset;
 		lowerBarPositionY = currentPositionOffset + lowerBarOffset;
@@ -122,7 +126,6 @@ public class GameController : MonoBehaviour {
 
 //	Logic for starting a new game from the beginning
 	private void startNewGame () {
-		Debug.Log ("starting a new game");
 		score = 0;
 		difficultyModifier = 1f;
 		targetScore = Mathf.RoundToInt (perRoundScore * (difficultyModifier * 100f));
@@ -130,7 +133,6 @@ public class GameController : MonoBehaviour {
 	}
 
 	private void startNewRound () {
-		Debug.Log ("starting a new round");
 		targetPositionOffset = -6f;
 		bed.GetComponent<SpriteRenderer> ().sprite = neutral;
 		playerHealth = 3;
@@ -181,7 +183,7 @@ public class GameController : MonoBehaviour {
 		setWave ();
 		lastCubePositionX = createNewSpawnPositionX (randomWave);
 		setCubeType ();
-		lastCubeSpawnTime = Time.fixedTime;
+		lastCubeSpawnTime = cubeSpawnTimer;
 		GameObject newCube;
 		switch (cubeType) {
 		case "GoodCube":
@@ -224,25 +226,25 @@ public class GameController : MonoBehaviour {
 		case 2:
 			result = (2.15f * (Mathf.Sin (spawnCounter)));
 			speed = -.05f;
-			spawnInterval = .3f;
+			spawnInterval = spawnInterval + .3f;
 			spawnSpread = .5f;
 			break;
 		case 1:
 			result = (2.00f * (Mathf.Sin (spawnCounter)));
 			speed = -.045f;
-			spawnInterval = .18f;
+			spawnInterval = spawnInterval + .18f;
 			spawnSpread = .65f;
 			break;
 		case 0:
 			result = (1.15f * (Mathf.Sin (spawnCounter)));
 			speed = -.055f;
-			spawnInterval = .35f;
+			spawnInterval = spawnInterval + .35f;
 			spawnSpread = .5f;
 			break;
 		default:
 			result = (2.15f * (Mathf.Sin (spawnCounter)));
 			speed = -.05f;
-			spawnInterval = .3f;
+			spawnInterval = spawnInterval + .3f;
 			spawnSpread = .5f;
 			break;
 		}
@@ -271,10 +273,12 @@ public class GameController : MonoBehaviour {
 	public void scoreHit (GameObject cube) {
 		score++;
 		streak++;
-		if (streak == 10 && playerHealth < 5) {
+		if (streak == 10) {
 			streak = 0;
-			playerHealth++;
-			shiftBed (-bedShiftDistance);
+			if (playerHealth < 5) {
+				playerHealth++;
+				shiftBed (-bedShiftDistance);
+			}
 		}
 
 		if (streak != 0 && streak % 5 == 0) {
