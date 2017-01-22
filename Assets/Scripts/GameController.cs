@@ -80,7 +80,6 @@ public class GameController : MonoBehaviour {
 		currentPositionOffset = bed.transform.position.y;
 		targetPositionOffset = bed.transform.position.y;
 		bed.GetComponent<SpriteRenderer> ().sprite = neutral;
-		targetScore = Mathf.RoundToInt (perRoundScore * (difficultyModifier * 10f));
 		betweenRounds = false;
 	}
 
@@ -233,25 +232,25 @@ public class GameController : MonoBehaviour {
 		case 2:
 			result = (2.15f * (Mathf.Sin (spawnCounter)));
 			speed = -.05f;
-			spawnInterval = 2f;
+			spawnInterval = 12f;
 			spawnSpread = .5f;
 			break;
 		case 1:
 			result = (2.00f * (Mathf.Sin (spawnCounter)));
 			speed = -.045f;
-			spawnInterval = 12f;
+			spawnInterval = 15f;
 			spawnSpread = .65f;
 			break;
 		case 0:
 			result = (1.15f * (Mathf.Sin (spawnCounter)));
 			speed = -.055f;
-			spawnInterval = 20f;
+			spawnInterval = 18f;
 			spawnSpread = .5f;
 			break;
 		default:
 			result = (2.15f * (Mathf.Sin (spawnCounter)));
 			speed = -.05f;
-			spawnInterval = 2f;
+			spawnInterval = 12f;
 			spawnSpread = .5f;
 			break;
 		}
