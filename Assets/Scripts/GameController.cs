@@ -30,7 +30,9 @@ public class GameController : MonoBehaviour {
 	public Mesh mesh1;
 	public Mesh mesh2;
 	public Mesh mesh3;
-	public Texture2D tex1;
+	public Material mat1;
+	public Material mat2;
+	public Material mat3;
 
 
 	private List<GameObject> cubes;
@@ -264,19 +266,24 @@ public class GameController : MonoBehaviour {
 	private void spawnDrop (Vector3 position) {
 		
 		Mesh newMesh;
+		Material newMat;
 		float which = Random.Range(0.0f,1.0f);
 		GameObject newDrop = Instantiate (dropable, gameObject.transform);
 		newDrop.transform.position = position;
 
-		if (which > 0.6f)
+		if (which > 0.6f) {
 			newMesh = mesh1;
-		else if (which > 0.3f)
+			newMat = mat1;
+		} else if (which > 0.3f) {
 			newMesh = mesh2;
-		else
+			newMat = mat2;
+		} else {
 			newMesh = mesh3;
+			newMat = mat3;
+		}
 		
 		newDrop.gameObject.GetComponentInChildren<MeshFilter> ().mesh = newMesh;
-		newDrop.gameObject.GetComponentInChildren<Material> ().mainTexture = tex1;
+		newDrop.gameObject.GetComponentInChildren<Renderer> ().material = newMat;
 		StartCoroutine(destroyDrop (newDrop, 5.0f));
 
 	}
