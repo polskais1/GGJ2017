@@ -11,7 +11,7 @@ public class DropableObject : MonoBehaviour
 	public bool rotates = false;
 	public float growthTime = 0.25f;
 	public float rotationRange = 500.0f;
-	public float directionRange = 10.0f;
+	public float directionRange = 2.5f;
 
 	private float startTime;
 
@@ -30,7 +30,7 @@ public class DropableObject : MonoBehaviour
 		} else {
 			
 			direction = new Vector2 (
-				Random.Range (-directionRange, directionRange), 
+				Random.Range (-directionRange/2.0f, directionRange/2.0f), 
 				Random.Range (0.0f, directionRange)
 			);
 
@@ -41,8 +41,8 @@ public class DropableObject : MonoBehaviour
 	void Update () {
 		float currentSize = Mathf.Min(
 			(Time.time - startTime)/growthTime, 
-			2.0f
-		);
+			1.0f
+		) * 0.35f;
 
 		if(rotates) {
 
@@ -55,8 +55,8 @@ public class DropableObject : MonoBehaviour
 
 			gameObject.transform.position += new Vector3 (
 				direction.x * Time.deltaTime, 
-				direction.y * 2.0f * Time.deltaTime, 
-				gravity * Time.deltaTime
+				direction.y * Time.deltaTime, 
+				0.0f
 			);
 
 		}
