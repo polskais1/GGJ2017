@@ -4,12 +4,17 @@ using System.Collections.Generic;
 
 public class GameController : MonoBehaviour {
 
+	public Camera mainCamera;
 	public GameObject cube;
 	public GameObject dropable;
 	public GameObject bed;
+	public Sprite neutral;
+	public Sprite happy;
+	public Sprite angry;
 	public float spawnInterval;
 	public float spawnSpread;
 	public float speed;
+	public float bedOrigin;
 	public float offsetResetSpeed;
 	public float upperBarOffset;
 	public float lowerBarOffset;
@@ -21,6 +26,8 @@ public class GameController : MonoBehaviour {
 	private float lastCubeSpawnTime;
 	private int hitsInARow;
 	private bool gameOver;
+	private bool inStartSequence;
+	private bool inEndSequence;
 	private float currentPositionOffset;
 	private float targetPositionOffset;
 	private float upperBarPositionY;
@@ -30,14 +37,18 @@ public class GameController : MonoBehaviour {
 		lastCubePositionX = Random.Range (2.2f, -2.2f);
 		lastCubeSpawnTime = Time.realtimeSinceStartup;
 		cubes = new List<GameObject> ();
-		gameOver = false;
+		gameOver = true;
 		currentPositionOffset = bed.transform.position.y;
 		targetPositionOffset = bed.transform.position.y;
+		bed.GetComponent<SpriteRenderer> ().sprite = neutral;
 	}
 
 	void FixedUpdate () {
-		if (gameOver)
+		if (gameOver && !inStartSequence) {
+			if (Input.GetMouseButton (0))
+				inStartSequence = true;
 			return;
+		}
 		
 		if (lastCubeSpawnTime + spawnInterval < Time.realtimeSinceStartup) {
 			spawnCube ();
@@ -45,6 +56,12 @@ public class GameController : MonoBehaviour {
 	}
 
 	void Update () {
+		if (inStartSequence)
+			moveCamera (0.1f, 0);
+
+		if (inEndSequence)
+			moveCamera (-0.1f, -4);
+
 		if (currentPositionOffset > targetPositionOffset)
 			currentPositionOffset -= offsetResetSpeed;
 
@@ -57,8 +74,26 @@ public class GameController : MonoBehaviour {
 	}
 
 	private void startGame () {
-		cubes = new List<GameObject> ();
+		targetPositionOffset = -6f;
+		bed.GetComponent<SpriteRenderer> ().sprite = neutral;
+		playerHealth = 3;
 		gameOver = false;
+	}
+
+	private void moveCamera (float distance, int target) {
+		float positionX = mainCamera.transform.position.x;
+		float positionY = mainCamera.transform.position.y + distance;
+		float positionZ = mainCamera.transform.position.z;
+		mainCamera.transform.position = new Vector3 (positionX, positionY, positionZ);
+
+//		The camera has gotten to its final point and the game can start
+		if (Mathf.RoundToInt (positionY) == target) {
+			inStartSequence = false;
+			inEndSequence = false;
+			cubes = new List<GameObject> ();
+			if (target == 0)
+				startGame ();
+		}
 	}
 
 	private void spawnCube () {
@@ -81,9 +116,10 @@ public class GameController : MonoBehaviour {
 	}
 
 	private void endGame () {
-		gameOver = true;
 		foreach (GameObject cube in cubes)
 			Destroy (cube);
+		gameOver = true;
+		inEndSequence = true;
 	}
 
 	private void destroyCube (GameObject cube) {
@@ -101,7 +137,7 @@ public class GameController : MonoBehaviour {
 	}
 
 	private void shiftBed (float distance) {
-		targetPositionOffset = bed.transform.position.y + distance;
+		targetPositionOffset = bedOrigin + distance;
 	}
 
 	public void scoreHit (GameObject cube) {
@@ -114,6 +150,8 @@ public class GameController : MonoBehaviour {
 		if (hitsInARow != 0 && hitsInARow % 5 == 0) {
 			spawnDrop (cube.transform.position);
 		}
+		if (playerHealth > 3)
+			bed.GetComponent<SpriteRenderer> ().sprite = happy;
 
 		destroyCube (cube);
 	}
@@ -121,9 +159,13 @@ public class GameController : MonoBehaviour {
 	public void damagePlayer (GameObject cube) {
 		hitsInARow = 0;
 		if (playerHealth == 1) {
+			bed.GetComponent<SpriteRenderer> ().sprite = angry;
 			endGame ();
 			return;
 		}
+
+		if (playerHealth < 4)
+			bed.GetComponent<SpriteRenderer> ().sprite = neutral;
 
 		playerHealth--;
 		destroyCube (cube);
