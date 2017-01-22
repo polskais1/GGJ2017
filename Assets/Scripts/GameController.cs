@@ -6,6 +6,7 @@ public class GameController : MonoBehaviour {
 
 	public Camera mainCamera;
 	public GameObject cube;
+	public GameObject badCube;
 	public GameObject dropable;
 	public GameObject bed;
 	public GameObject waveTrail;
@@ -26,12 +27,13 @@ public class GameController : MonoBehaviour {
 	public int bedShiftDistance;
 	public int randomWave;
 	public int waveCounter;
-	public int targetScore = 0;
 	public Mesh mesh1;
 	public Mesh mesh2;
 	public Mesh mesh3;
 	public Texture2D tex1;
-
+	public int badCubeCounter;
+	public int targetScore;
+	public string cubeType;
 
 	private List<GameObject> cubes;
 	private float lastCubePositionX;
@@ -55,8 +57,7 @@ public class GameController : MonoBehaviour {
 		currentPositionOffset = bed.transform.position.y;
 		targetPositionOffset = bed.transform.position.y;
 		bed.GetComponent<SpriteRenderer> ().sprite = neutral;
-		if(targetScore == 0)
-			targetScore = Mathf.RoundToInt (perRoundScore * (difficultyModifier * 10f));
+		targetScore = Mathf.RoundToInt (perRoundScore * (difficultyModifier * 10f));
 		betweenRounds = false;
 	}
 
@@ -158,18 +159,44 @@ public class GameController : MonoBehaviour {
 
 	private void spawnCube () {
 		spawnCounter += spawnSpread;
+		setWave ();
+		lastCubePositionX = createNewSpawnPositionX (randomWave);
+		setCubeType ();
+		lastCubeSpawnTime = Time.fixedTime;
+		GameObject newCube;
+		switch (cubeType) {
+		case "GoodCube":
+			newCube = Instantiate (cube, gameObject.transform);
+			break;
+		case "BadCube":
+			newCube = Instantiate (badCube, gameObject.transform);
+			break;
+		default:
+			newCube = Instantiate (cube, gameObject.transform);
+			break;
+		}
+
+		newCube.transform.position = new Vector3 (lastCubePositionX, 8, 0);
+		cubes.Add (newCube);
+	}
+
+	private void setCubeType(){
+		badCubeCounter++;
+		if (badCubeCounter>Random.Range(10,15)) {
+			cubeType = "BadCube";
+		}
+		if(badCubeCounter>Random.Range(17,21)){
+			badCubeCounter = 0;
+			cubeType = "GoodCube";
+		}
+	}
+
+	private void setWave(){
 		waveCounter++;
 		if (waveCounter > 20) {
 			waveCounter = 0;
 			randomWave = Random.Range (0,3);
-			Debug.Log("New Wave!  Wave: " + randomWave);
 		}
-		lastCubePositionX = createNewSpawnPositionX (randomWave);
-
-		lastCubeSpawnTime = Time.fixedTime;
-		GameObject newCube = Instantiate (cube, gameObject.transform);
-		newCube.transform.position = new Vector3 (lastCubePositionX, 8, 0);
-		cubes.Add (newCube);
 	}
 
 	private float createNewSpawnPositionX (int wavePattern) {
@@ -201,7 +228,6 @@ public class GameController : MonoBehaviour {
 			break;
 		}
 			
-
 		return result;
 	}
 

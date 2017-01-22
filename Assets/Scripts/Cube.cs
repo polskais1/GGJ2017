@@ -8,16 +8,16 @@ public class Cube : MonoBehaviour {
 	public bool canTap;
 	public bool liveCube;
 
-	private GameController gameController;
+	protected GameController gameController;
 
-	void Awake () {
+	protected void Awake () {
 		gameController = gameObject.GetComponentInParent<GameController> ();
 		liveCube = true;
 		canTap = false;
 		cubeTapped = false;
 	}
 
-	void Update () {
+	protected virtual void Update () {
 		
 		this.gameObject.transform.Rotate (0, rotationSpeed, 0);
 
@@ -35,7 +35,7 @@ public class Cube : MonoBehaviour {
 
 	}
 
-	private void checkCubeTapped(){
+	protected void checkCubeTapped(){
 		if (canTap) {
 //			if (Input.touchCount > 0) {
 				//checkCubeTouched ();
@@ -44,7 +44,7 @@ public class Cube : MonoBehaviour {
 		}
 	}
 
-	private void checkCubeTouchedMouse(){
+	protected void checkCubeTouchedMouse(){
 		if (Input.GetMouseButton (0)) {
 			Vector3 mouseVector = Input.mousePosition;
 			mouseVector.z = 10;
@@ -61,7 +61,7 @@ public class Cube : MonoBehaviour {
 		}
 	}
 		
-	private void checkCubeTouched(){
+	protected void checkCubeTouched(){
 
 		Vector3 userTouchVector = Input.touches [Input.touchCount - 1].position;
 		userTouchVector.z = 10;
@@ -77,7 +77,7 @@ public class Cube : MonoBehaviour {
 		}
 	}
 
-	private void checkCanTap(){
+	protected void checkCanTap(){
 		if (!canTap) {
 			checkTopInput ();
 		} else {
@@ -85,18 +85,19 @@ public class Cube : MonoBehaviour {
 		}
 	}
 
-	private void checkTopInput(){
+	protected void checkTopInput(){
 		if (this.gameObject.transform.position.y < gameController.getUpperBarPositionY()) {
 			canTap = true;
 		}
 	}
 
-	private void checkBottomInput(){
+	protected virtual void checkBottomInput(){
 		if (this.gameObject.transform.position.y < gameController.getLowerBarPositionY()) {
 			canTap = false;
 			liveCube = false;
 			gameController.damagePlayer (gameObject);
 		}
 	}
-		
 }
+
+
