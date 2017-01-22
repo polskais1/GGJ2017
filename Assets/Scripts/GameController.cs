@@ -8,6 +8,7 @@ public class GameController : MonoBehaviour {
 	public GameObject cube;
 	public GameObject dropable;
 	public GameObject bed;
+	public GameObject waveTrail;
 	public Sprite neutral;
 	public Sprite happy;
 	public Sprite angry;
@@ -77,6 +78,7 @@ public class GameController : MonoBehaviour {
 		targetPositionOffset = -6f;
 		bed.GetComponent<SpriteRenderer> ().sprite = neutral;
 		playerHealth = 3;
+		waveTrail.SetActive (true);
 		gameOver = false;
 	}
 
@@ -116,6 +118,7 @@ public class GameController : MonoBehaviour {
 	}
 
 	private void endGame () {
+		waveTrail.SetActive (false);
 		foreach (GameObject cube in cubes)
 			Destroy (cube);
 		gameOver = true;
@@ -178,6 +181,10 @@ public class GameController : MonoBehaviour {
 
 	public float getLastCubePositionX () {
 		return lastCubePositionX;
+	}
+
+	public bool getGameOver () {
+		return gameOver;
 	}
 
 	public List<GameObject> getCubes () {

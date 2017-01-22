@@ -13,6 +13,11 @@ public class LowerBar : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if (gameController.getGameOver () && gameObject.transform.localScale.x != 0)
+			gameObject.transform.localScale = new Vector3 (0f, 0f, 0f);
+		else if (!gameController.getGameOver () && gameObject.transform.localScale.x == 0)
+			gameObject.transform.localScale = new Vector3 (0.1f, 4f, 0.1f);
+		
 		setBarPosition ();
 	}
 
