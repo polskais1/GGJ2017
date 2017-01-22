@@ -128,7 +128,6 @@ public class GameController : MonoBehaviour {
 		difficultyModifier = 1f;
 		targetScore = Mathf.RoundToInt (perRoundScore * (difficultyModifier * 10f));
 		startNewRound ();
-		PlayMusic ();
 	}
 
 	private void startNewRound () {
@@ -137,6 +136,7 @@ public class GameController : MonoBehaviour {
 		playerHealth = 3;
 		gameOver = false;
 		betweenRounds = false;
+		PlayMusic ();
 	}
 
 	private void endGame () {
