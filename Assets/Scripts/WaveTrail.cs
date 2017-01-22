@@ -16,7 +16,6 @@ public class WaveTrail : MonoBehaviour {
 
 	public void renderLineFromCubes () {
 		LineRenderer linerenderer = gameObject.GetComponent<LineRenderer> ();
-
 		List<GameObject> cubes = gameController.getCubes ();
 		linerenderer.numPositions = cubes.Count;
 
