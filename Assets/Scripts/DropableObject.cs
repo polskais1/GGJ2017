@@ -31,7 +31,7 @@ public class DropableObject : MonoBehaviour
 			
 			direction = new Vector2 (
 				Random.Range (-directionRange, directionRange), 
-				Random.Range (-directionRange, directionRange)
+				Random.Range (0.0f, directionRange)
 			);
 
 		}
