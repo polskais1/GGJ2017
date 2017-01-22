@@ -10,18 +10,21 @@ public class Cube : MonoBehaviour {
 
 	protected GameController gameController;
 
+	private float speed;
+
 	protected void Awake () {
 		gameController = gameObject.GetComponentInParent<GameController> ();
 		liveCube = true;
 		canTap = false;
 		cubeTapped = false;
+		speed = gameController.getSpeed ();
 	}
 
 	protected virtual void Update () {
 		
 		this.gameObject.transform.Rotate (0, rotationSpeed, 0);
 
-		this.gameObject.transform.Translate (0, gameController.getSpeed (), 0f);
+		this.gameObject.transform.Translate (0, speed, 0f);
 
 		if (liveCube) {
 			checkCanTap ();
@@ -86,13 +89,13 @@ public class Cube : MonoBehaviour {
 	}
 
 	protected void checkTopInput(){
-		if (this.gameObject.transform.position.y < gameController.getUpperBarPositionY()) {
+		if (gameObject.transform.position.y < gameController.getUpperBarPositionY() - 4f) {
 			canTap = true;
 		}
 	}
 
 	protected virtual void checkBottomInput(){
-		if (this.gameObject.transform.position.y < gameController.getLowerBarPositionY()) {
+		if (gameObject.transform.position.y < gameController.getLowerBarPositionY() - 4f) {
 			canTap = false;
 			liveCube = false;
 			gameController.damagePlayer (gameObject);

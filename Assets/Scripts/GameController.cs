@@ -10,6 +10,8 @@ public class GameController : MonoBehaviour {
 	public GameObject dropable;
 	public GameObject bed;
 	public GameObject waveTrail;
+	public GameObject title;
+	public GameObject gameOverButton;
 	public Sprite neutral;
 	public Sprite happy;
 	public Sprite angry;
@@ -70,7 +72,6 @@ public class GameController : MonoBehaviour {
 		currentPositionOffset = bed.transform.position.y;
 		targetPositionOffset = bed.transform.position.y;
 		bed.GetComponent<SpriteRenderer> ().sprite = neutral;
-		targetScore = Mathf.RoundToInt (perRoundScore * (difficultyModifier * 10f));
 		betweenRounds = false;
 	}
 
@@ -80,6 +81,11 @@ public class GameController : MonoBehaviour {
 				inStartSequence = true;
 			else if (Input.GetMouseButtonDown (0) && !inStartSequence && betweenRounds)
 				startNextRound ();
+			else if (title.activeSelf && inStartSequence)
+				title.SetActive (false);
+
+			if (gameOverButton.activeSelf && inStartSequence)
+				gameOverButton.SetActive (false);
 			return;
 		}
 
@@ -120,7 +126,7 @@ public class GameController : MonoBehaviour {
 	private void startNewGame () {
 		score = 0;
 		difficultyModifier = 1f;
-		targetScore = Mathf.RoundToInt (perRoundScore * (difficultyModifier * 100f));
+		targetScore = Mathf.RoundToInt (perRoundScore * (difficultyModifier * 10f));
 		startNewRound ();
 		PlayMusic ();
 	}
@@ -144,7 +150,7 @@ public class GameController : MonoBehaviour {
 
 	//	Logic for starting a new round in an ongoing game
 	private void startNextRound () {
-		difficultyModifier += 0.1f;
+		difficultyModifier += 1f;
 		targetScore = targetScore + Mathf.RoundToInt (perRoundScore * (difficultyModifier * 10f));
 		inStartSequence = true;
 	}
@@ -237,25 +243,25 @@ public class GameController : MonoBehaviour {
 		case 2:
 			result = (2.15f * (Mathf.Sin (spawnCounter)));
 			speed = -.05f;
-			spawnInterval = spawnInterval + .3f;
+			spawnInterval = 12f;
 			spawnSpread = .5f;
 			break;
 		case 1:
 			result = (2.00f * (Mathf.Sin (spawnCounter)));
 			speed = -.045f;
-			spawnInterval = spawnInterval + .18f;
+			spawnInterval = 15f;
 			spawnSpread = .65f;
 			break;
 		case 0:
 			result = (1.15f * (Mathf.Sin (spawnCounter)));
 			speed = -.055f;
-			spawnInterval = spawnInterval + .35f;
+			spawnInterval = 18f;
 			spawnSpread = .5f;
 			break;
 		default:
 			result = (2.15f * (Mathf.Sin (spawnCounter)));
 			speed = -.05f;
-			spawnInterval = spawnInterval + .3f;
+			spawnInterval = 12f;
 			spawnSpread = .5f;
 			break;
 		}
@@ -311,6 +317,7 @@ public class GameController : MonoBehaviour {
 		if (playerHealth == 1) {
 			bed.GetComponent<SpriteRenderer> ().sprite = angry;
 			endGame ();
+			gameOverButton.SetActive (true);
 			return;
 		}
 

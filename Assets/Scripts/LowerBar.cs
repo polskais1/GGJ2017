@@ -16,7 +16,7 @@ public class LowerBar : MonoBehaviour {
 		if (gameController.getGameOver () && gameObject.transform.localScale.x != 0)
 			gameObject.transform.localScale = new Vector3 (0f, 0f, 0f);
 		else if (!gameController.getGameOver () && gameObject.transform.localScale.x == 0)
-			gameObject.transform.localScale = new Vector3 (0.1f, 4f, 0.1f);
+			gameObject.transform.localScale = new Vector3 (2f, 2f, 2f);
 		
 		setBarPosition ();
 	}
